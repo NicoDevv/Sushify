@@ -17,7 +17,7 @@ const DishPage: React.FC = () => {
         <div className="text-center">
           <h2 className="text-2xl text-red-800 mb-4">Piatto non trovato</h2>
           <button 
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/menu')}
             className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-600 transition-colors"
           >
             Torna al Menù
@@ -26,7 +26,7 @@ const DishPage: React.FC = () => {
       </div>
     );
   }
-
+  
   // Get removed ingredients for this dish
   const dishRemovedIngredients = removedIngredients[item.id] || [];
   // Filter ingredients to show only those not removed
@@ -38,7 +38,7 @@ const DishPage: React.FC = () => {
       
       <div className="container mx-auto px-4">
         <button 
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/menu')}
           className="flex items-center text-red-800 hover:text-red-600 mb-6"
         >
           <ArrowLeft size={18} className="mr-1" />
