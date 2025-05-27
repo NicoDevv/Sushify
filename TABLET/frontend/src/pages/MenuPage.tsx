@@ -2,9 +2,38 @@ import React from 'react';
 import { useSushi } from '../context/SushiContext';
 import MenuCard from '../components/MenuCard';
 import JapanesePattern from '../components/JapanesePattern';
+import { Loader2 } from 'lucide-react';
 
 const MenuPage: React.FC = () => {
-  const { items } = useSushi();
+  const { items, loading, error } = useSushi();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="animate-spin h-10 w-10 text-red-800 mx-auto mb-4" />
+          <p className="text-gray-600">Loading menu items...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl text-red-800 mb-4">Failed to load menu</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-600 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-20 pb-8 min-h-screen relative">

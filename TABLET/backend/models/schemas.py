@@ -27,6 +27,9 @@ class PiattoDetailResponse(BaseModel):
     immagine_url: Optional[str] = None
     componenti: List[ComponenteResponse] = []
 
+class PiattoListResponse(BaseModel):
+    piatti: List[PiattoDetailResponse] = []
+
 class PiattoModificabileResponse(BaseModel):
     id_piatto: int
     nome_piatto: str

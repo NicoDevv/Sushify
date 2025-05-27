@@ -4,12 +4,14 @@ from models.schemas import (
     PiattoDetailResponse, 
     PiattoModificabileResponse,
     PiattoModificaRequest,
-    PiattoCarrelloResponse
+    PiattoCarrelloResponse,
+    PiattoListResponse  # New schema
 )
 from services.piatto_service import (
     get_piatto_by_id, 
     get_componenti_modificabili,
-    aggiungi_piatto_modificato_al_carrello
+    aggiungi_piatto_modificato_al_carrello,
+    get_all_piatti  # New service function
 )
 
 router = APIRouter(
@@ -17,6 +19,14 @@ router = APIRouter(
     tags=["piatto"],
     responses={404: {"description": "Not found"}},
 )
+
+@router.get("", response_model=List[PiattoDetailResponse])
+def get_all_dishes():
+    """
+    Get all available dishes with their components.
+    This endpoint is used to populate the menu on the frontend.
+    """
+    return get_all_piatti()
 
 @router.get("/{piatto_id}", response_model=PiattoDetailResponse)
 def get_piatto_detail(piatto_id: int):

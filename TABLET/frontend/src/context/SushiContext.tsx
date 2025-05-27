@@ -1,9 +1,11 @@
-import React, { createContext, useContext, useState } from 'react';
-import { sushiItems } from '../data/sushiData';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SushiItem } from '../types';
+import { fetchAllSushiItems } from '../services/sushiService';
 
 interface SushiContextType {
   items: SushiItem[];
+  loading: boolean;
+  error: string | null;
   getItemById: (id: number) => SushiItem | undefined;
   customizeDish: (id: number, removedIngredients: string[]) => void;
   removedIngredients: Record<number, string[]>;
@@ -12,8 +14,29 @@ interface SushiContextType {
 const SushiContext = createContext<SushiContextType | undefined>(undefined);
 
 export const SushiProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [items] = useState<SushiItem[]>(sushiItems);
+  const [items, setItems] = useState<SushiItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [removedIngredients, setRemovedIngredients] = useState<Record<number, string[]>>({});
+
+  // Fetch sushi items when the component mounts
+  useEffect(() => {
+    const loadSushiItems = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchAllSushiItems();
+        setItems(data);
+        setError(null);
+      } catch (err) {
+        setError('Failed to load menu items. Please try again later.');
+        console.error('Error loading sushi items:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSushiItems();
+  }, []);
 
   const getItemById = (id: number) => {
     return items.find(item => item.id === id);
@@ -27,7 +50,14 @@ export const SushiProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <SushiContext.Provider value={{ items, getItemById, customizeDish, removedIngredients }}>
+    <SushiContext.Provider value={{ 
+      items, 
+      loading, 
+      error,
+      getItemById, 
+      customizeDish, 
+      removedIngredients 
+    }}>
       {children}
     </SushiContext.Provider>
   );

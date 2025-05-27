@@ -205,3 +205,39 @@ def aggiungi_piatto_modificato_al_carrello(piatto_id: int, componenti_rimossi: L
         raise HTTPException(status_code=500, detail=f"Errore durante l'elaborazione del piatto modificato: {e}")
     finally:
         connection.close()
+
+def get_all_piatti():
+    """
+    Get all dishes with their components.
+    """
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            # Get all dishes
+            cursor.execute("""
+                SELECT id_piatto, nome_piatto, descrizione, prezzo, categoria, immagine_url
+                FROM piatto 
+                ORDER BY categoria, nome_piatto
+            """)
+            piatti = cursor.fetchall()
+            
+            # For each dish, get its components
+            result = []
+            for piatto in piatti:
+                cursor.execute("""
+                    SELECT c.id_componente, c.nome_componente, c.intolleranza
+                    FROM componenti c
+                    JOIN piatto_componenti pc ON c.id_componente = pc.id_c
+                    WHERE pc.cod_p = %s
+                """, (piatto["id_piatto"],))
+                componenti = cursor.fetchall()
+                
+                piatto_with_components = dict(piatto)
+                piatto_with_components["componenti"] = componenti
+                result.append(piatto_with_components)
+            
+            return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error retrieving dishes: {e}")
+    finally:
+        connection.close()
