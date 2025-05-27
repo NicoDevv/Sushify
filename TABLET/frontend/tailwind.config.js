@@ -28,7 +28,14 @@ export default {
         serif: ['"Noto Serif JP"', 'serif']
       },
       animation: {
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+        'slide-in-right': 'slideInRight 0.3s ease-out forwards',
+        'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+      },
+      keyframes: {
+        slideInRight: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0)' }
+        }
       }
     },
   },
