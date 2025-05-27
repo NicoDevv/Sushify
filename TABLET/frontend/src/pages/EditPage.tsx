@@ -24,12 +24,12 @@ const EditPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl text-red-800 mb-4">Dish not found</h2>
+          <h2 className="text-2xl text-red-800 mb-4">Piatto non trovato</h2>
           <button 
             onClick={() => navigate('/')}
             className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-600 transition-colors"
           >
-            Return to Menu
+            Torna al Menù
           </button>
         </div>
       </div>
@@ -59,16 +59,16 @@ const EditPage: React.FC = () => {
           className="flex items-center text-red-800 hover:text-red-600 mb-6"
         >
           <ArrowLeft size={18} className="mr-1" />
-          Back to Dish
+          Torna al Piatto
         </button>
         
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-6">
-            <h1 className="text-2xl font-bold text-red-900 mb-2">Customize: {item.name}</h1>
-            <p className="text-gray-600 mb-6">Remove any ingredients you don't want in your dish.</p>
+            <h1 className="text-2xl font-bold text-red-900 mb-2">Personalizza: {item.name}</h1>
+            <p className="text-gray-600 mb-6">Rimuovi gli ingredienti che non desideri nel tuo piatto.</p>
             
             <div className="bg-red-50 p-4 rounded-lg mb-6">
-              <h3 className="text-lg font-semibold text-red-800 mb-4">Ingredients</h3>
+              <h3 className="text-lg font-semibold text-red-800 mb-4">Ingredienti</h3>
               <div className="space-y-2">
                 {item.ingredients.map((ingredient, index) => (
                   <div 
@@ -93,12 +93,18 @@ const EditPage: React.FC = () => {
               </div>
             </div>
             
-            <div className="flex justify-end">
+            <div className="flex justify-between">
+              <button
+                onClick={() => navigate(`/dish/${item.id}`)}
+                className="px-6 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+              >
+                Annulla
+              </button>
               <button 
                 onClick={handleSave}
                 className="px-6 py-2 bg-red-800 text-white rounded hover:bg-red-700 transition-colors"
               >
-                Save Changes
+                Salva Modifiche
               </button>
             </div>
           </div>

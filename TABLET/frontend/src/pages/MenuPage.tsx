@@ -12,7 +12,7 @@ const MenuPage: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="animate-spin h-10 w-10 text-red-800 mx-auto mb-4" />
-          <p className="text-gray-600">Loading menu items...</p>
+          <p className="text-gray-600">Caricamento del menù in corso...</p>
         </div>
       </div>
     );
@@ -22,13 +22,13 @@ const MenuPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl text-red-800 mb-4">Failed to load menu</h2>
+          <h2 className="text-2xl text-red-800 mb-4">Impossibile caricare il menù</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button 
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-600 transition-colors"
           >
-            Try Again
+            Riprova
           </button>
         </div>
       </div>
@@ -41,9 +41,9 @@ const MenuPage: React.FC = () => {
       
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-red-900 mb-2">Our Sushi Menu</h2>
+          <h2 className="text-3xl font-bold text-red-900 mb-2">Il Nostro Menù Sushi</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover our selection of authentic Japanese sushi, prepared with fresh ingredients and traditional techniques
+            Scopri la nostra selezione di autentico sushi giapponese, preparato con ingredienti freschi e tecniche tradizionali
           </p>
         </div>
         

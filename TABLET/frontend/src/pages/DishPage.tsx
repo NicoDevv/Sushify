@@ -15,12 +15,12 @@ const DishPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl text-red-800 mb-4">Dish not found</h2>
+          <h2 className="text-2xl text-red-800 mb-4">Piatto non trovato</h2>
           <button 
             onClick={() => navigate('/')}
             className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-600 transition-colors"
           >
-            Return to Menu
+            Torna al Menù
           </button>
         </div>
       </div>
@@ -42,7 +42,7 @@ const DishPage: React.FC = () => {
           className="flex items-center text-red-800 hover:text-red-600 mb-6"
         >
           <ArrowLeft size={18} className="mr-1" />
-          Back to Menu
+          Torna al Menù
         </button>
         
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -54,6 +54,7 @@ const DishPage: React.FC = () => {
                 className="w-full h-64 md:h-full object-cover"
               />
             </div>
+            
             <div className="md:w-1/2 p-6">
               <div className="flex justify-between items-start">
                 <div>
@@ -62,13 +63,13 @@ const DishPage: React.FC = () => {
                   </span>
                   <h1 className="text-2xl font-bold text-red-900 mb-2">{item.name}</h1>
                 </div>
-                <span className="text-2xl font-bold text-yellow-600">${item.price.toFixed(2)}</span>
+                <span className="text-2xl font-bold text-yellow-600">€{item.price.toFixed(2)}</span>
               </div>
               
               <p className="text-gray-700 mb-6">{item.description}</p>
               
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-red-800 mb-2">Ingredients</h3>
+                <h3 className="text-lg font-semibold text-red-800 mb-2">Ingredienti</h3>
                 <div className="flex flex-wrap gap-2">
                   {currentIngredients.map((ingredient, index) => (
                     <span 
@@ -82,7 +83,7 @@ const DishPage: React.FC = () => {
                 
                 {dishRemovedIngredients.length > 0 && (
                   <div className="mt-4">
-                    <h4 className="text-sm font-medium text-gray-500 mb-1">Removed Ingredients:</h4>
+                    <h4 className="text-sm font-medium text-gray-500 mb-1">Ingredienti Rimossi:</h4>
                     <div className="flex flex-wrap gap-2">
                       {dishRemovedIngredients.map((ingredient, index) => (
                         <span 
@@ -103,10 +104,10 @@ const DishPage: React.FC = () => {
                   className="flex items-center justify-center px-4 py-2 bg-white border-2 border-red-800 text-red-800 rounded hover:bg-red-50 transition-colors"
                 >
                   <Edit size={18} className="mr-2" />
-                  Customize Dish
+                  Personalizza Piatto
                 </button>
                 <button className="px-4 py-2 bg-red-800 text-white rounded hover:bg-red-700 transition-colors">
-                  Add to Order
+                  Aggiungi all'Ordine
                 </button>
               </div>
             </div>

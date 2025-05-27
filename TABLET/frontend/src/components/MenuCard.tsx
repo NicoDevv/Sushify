@@ -16,7 +16,7 @@ const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
     >
       {item.popular && (
         <div className="absolute top-0 right-0 bg-yellow-500 text-white text-xs font-bold py-1 px-2 rounded-bl">
-          POPULAR
+          POPOLARE
         </div>
       )}
       <div className="h-48 overflow-hidden">
@@ -29,7 +29,7 @@ const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
       <div className="p-4 border-t-2 border-red-800">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-bold text-red-900">{item.name}</h3>
-          <span className="text-yellow-600 font-bold">${item.price.toFixed(2)}</span>
+          <span className="text-yellow-600 font-bold">€{item.price.toFixed(2)}</span>
         </div>
         <p className="text-gray-700 text-sm mb-3">{item.description}</p>
         <div className="flex justify-between items-center">
@@ -43,7 +43,7 @@ const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
               navigate(`/edit/${item.id}`);
             }}
           >
-            CUSTOMIZE
+            PERSONALIZZA
           </button>
         </div>
       </div>
