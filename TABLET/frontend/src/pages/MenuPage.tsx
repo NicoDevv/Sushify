@@ -1,11 +1,40 @@
 import React from 'react';
 import { useSushi } from '../context/SushiContext';
+import { useSearchParams } from 'react-router-dom';
 import MenuCard from '../components/MenuCard';
 import JapanesePattern from '../components/JapanesePattern';
 import { Loader2 } from 'lucide-react';
 
 const MenuPage: React.FC = () => {
-  const { items, loading, error } = useSushi();
+  const { items, loading, error, selectedMenuType } = useSushi();
+  const [searchParams] = useSearchParams();
+  const menuType = selectedMenuType || searchParams.get('type') || 'alacarte-regular';
+  
+  // Get menu information based on type
+  const getMenuInfo = () => {
+    const isAllYouCanEat = menuType.startsWith('allyoucaneat');
+    
+    if (isAllYouCanEat) {
+      const isFestive = menuType.includes('festive');
+      const price = isFestive ? 
+        (menuType.includes('cena') ? '€27.90' : '€17.90') : 
+        (menuType.includes('cena') ? '€25.90' : '€15.90');
+      
+      return {
+        title: `Menu All You Can Eat ${isFestive ? 'Festivo' : 'Feriale'}`,
+        description: `Tutti i piatti che desideri ad un prezzo fisso di ${price}`,
+        price
+      };
+    }
+    
+    return {
+      title: 'Menu À La Carte',
+      description: 'Scegli i tuoi piatti preferiti e paga per porzione',
+      price: null
+    };
+  };
+
+  const menuInfo = getMenuInfo();
 
   if (loading) {
     return (
@@ -41,10 +70,15 @@ const MenuPage: React.FC = () => {
       
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-red-900 mb-2">Il Nostro Menù Sushi</h2>
+          <h2 className="text-3xl font-bold text-red-900 mb-2">{menuInfo.title}</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Scopri la nostra selezione di autentico sushi giapponese, preparato con ingredienti freschi e tecniche tradizionali
+            {menuInfo.description}
           </p>
+          {menuInfo.price && (
+            <div className="mt-4 inline-block px-4 py-2 bg-red-100 text-red-800 rounded-full font-bold">
+              Prezzo fisso: {menuInfo.price}
+            </div>
+          )}
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

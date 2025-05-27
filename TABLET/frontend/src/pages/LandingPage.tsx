@@ -4,8 +4,10 @@ import { fetchMenuOptions, defaultMenuOptions } from '../data/menuOptions';
 import { MenuOption } from '../types';
 import { ChefHat } from 'lucide-react';
 import JapanesePattern from '../components/JapanesePattern';
+import { useSushi } from '../context/SushiContext';
 
 const LandingPage: React.FC = () => {
+  const { setSelectedMenuType } = useSushi();
   const navigate = useNavigate();
   const [menuOptions, setMenuOptions] = useState<MenuOption[]>(defaultMenuOptions);
   const [loading, setLoading] = useState<boolean>(true);
@@ -28,6 +30,11 @@ const LandingPage: React.FC = () => {
 
     getMenuOptions();
   }, []);
+
+  const handleMenuSelect = (menuType: MenuType) => {
+    setSelectedMenuType(menuType);
+    navigate(`/menu?type=${menuType}`);
+  };
 
   return (
     <div className="min-h-screen bg-red-50 relative overflow-hidden">
@@ -97,10 +104,10 @@ const LandingPage: React.FC = () => {
                         {option.price > 0 ? `€${option.price.toFixed(2)}` : 'Paga per piatto'}
                       </span>
                       <button
-                        onClick={() => navigate(`/menu?type=${option.id}`)}
+                        onClick={() => handleMenuSelect(option.id)}
                         className="px-6 py-2 bg-red-800 text-white rounded-full hover:bg-red-700 transition-colors"
                       >
-                        Visualizza Menu
+                        Seleziona Menu
                       </button>
                     </div>
                   </div>

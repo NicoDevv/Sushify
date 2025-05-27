@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSushi } from '../context/SushiContext';
 import { SushiItem } from '../types';
 
 interface MenuCardProps {
@@ -8,28 +9,29 @@ interface MenuCardProps {
 
 const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
   const navigate = useNavigate();
+  const { isALaCarte } = useSushi();
 
   return (
     <div 
-      className="bg-white rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer relative"
+      className="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow"
       onClick={() => navigate(`/dish/${item.id}`)}
     >
-      {item.popular && (
-        <div className="absolute top-0 right-0 bg-yellow-500 text-white text-xs font-bold py-1 px-2 rounded-bl">
-          POPOLARE
-        </div>
-      )}
-      <div className="h-48 overflow-hidden">
-        <img 
-          src={item.image} 
-          alt={item.name} 
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="p-4 border-t-2 border-red-800">
-        <div className="flex justify-between items-start mb-2">
+      <img 
+        src={item.image || 'https://via.placeholder.com/300x200?text=Sushi'}
+        alt={item.name}
+        className="w-full h-48 object-cover"
+        onError={(e) => {
+          const target = e.target as HTMLImageElement;
+          target.onerror = null; // Prevent infinite loops
+          target.src = 'https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg'; // Fallback image
+        }}
+      />
+      <div className="p-4">
+        <div className="flex justify-between items-start">
           <h3 className="text-lg font-bold text-red-900">{item.name}</h3>
-          <span className="text-yellow-600 font-bold">€{item.price.toFixed(2)}</span>
+          {isALaCarte && (
+            <span className="text-yellow-600 font-bold">€{item.price.toFixed(2)}</span>
+          )}
         </div>
         <p className="text-gray-700 text-sm mb-3">{item.description}</p>
         <div className="flex justify-between items-center">

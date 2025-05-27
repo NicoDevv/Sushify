@@ -7,7 +7,7 @@ import JapanesePattern from '../components/JapanesePattern';
 const DishPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getItemById, removedIngredients } = useSushi();
+  const { getItemById, removedIngredients, isALaCarte } = useSushi();
   
   const item = getItemById(Number(id));
   
@@ -68,7 +68,9 @@ const DishPage: React.FC = () => {
                   </span>
                   <h1 className="text-2xl font-bold text-red-900 mb-2">{item.name}</h1>
                 </div>
-                <span className="text-2xl font-bold text-yellow-600">€{item.price.toFixed(2)}</span>
+                {isALaCarte && (
+                  <span className="text-2xl font-bold text-yellow-600">€{item.price.toFixed(2)}</span>
+                )}
               </div>
               
               <p className="text-gray-700 mb-6">{item.description}</p>

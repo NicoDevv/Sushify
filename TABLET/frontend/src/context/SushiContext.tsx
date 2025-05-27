@@ -1,14 +1,17 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { SushiItem } from '../types';
+import { SushiItem, MenuType } from '../types';
 import { fetchAllSushiItems } from '../services/sushiService';
 
 interface SushiContextType {
   items: SushiItem[];
   loading: boolean;
   error: string | null;
-  getItemById: (id: number) => SushiItem | undefined;
-  customizeDish: (id: number, removedIngredients: string[]) => void;
   removedIngredients: Record<number, string[]>;
+  customizeDish: (id: number, ingredients: string[]) => void;
+  getItemById: (id: number) => SushiItem | undefined;
+  selectedMenuType: MenuType | null;
+  setSelectedMenuType: (type: MenuType | null) => void;
+  isALaCarte: boolean;
 }
 
 const SushiContext = createContext<SushiContextType | undefined>(undefined);
@@ -18,6 +21,10 @@ export const SushiProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [removedIngredients, setRemovedIngredients] = useState<Record<number, string[]>>({});
+  const [selectedMenuType, setSelectedMenuType] = useState<MenuType | null>(null);
+  
+  // Derive if the selected menu is à la carte
+  const isALaCarte = selectedMenuType ? selectedMenuType.startsWith('alacarte') : false;
 
   // Fetch sushi items when the component mounts
   useEffect(() => {
@@ -42,10 +49,10 @@ export const SushiProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return items.find(item => item.id === id);
   };
 
-  const customizeDish = (id: number, removed: string[]) => {
+  const customizeDish = (id: number, ingredients: string[]) => {
     setRemovedIngredients(prev => ({
       ...prev,
-      [id]: removed
+      [id]: ingredients
     }));
   };
 
@@ -54,18 +61,21 @@ export const SushiProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       items, 
       loading, 
       error,
-      getItemById, 
-      customizeDish, 
-      removedIngredients 
+      removedIngredients,
+      customizeDish,
+      getItemById,
+      selectedMenuType,
+      setSelectedMenuType,
+      isALaCarte
     }}>
       {children}
     </SushiContext.Provider>
   );
 };
 
-export const useSushi = (): SushiContextType => {
+export const useSushi = () => {
   const context = useContext(SushiContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useSushi must be used within a SushiProvider');
   }
   return context;
