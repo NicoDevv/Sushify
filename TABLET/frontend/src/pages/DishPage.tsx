@@ -49,9 +49,14 @@ const DishPage: React.FC = () => {
           <div className="md:flex">
             <div className="md:w-1/2">
               <img 
-                src={item.image} 
+                src={item.image || 'https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg'}
                 alt={item.name} 
                 className="w-full h-64 md:h-full object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null; // Previeni loop infiniti
+                  target.src = 'https://images.pexels.com/photos/2098085/pexels-photo-2098085.jpeg'; // Immagine di fallback
+                }}
               />
             </div>
             
