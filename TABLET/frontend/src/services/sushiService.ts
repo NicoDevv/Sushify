@@ -1,6 +1,6 @@
 import { SushiItem } from '../types';
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'http://localhost:8080'; // Modificato da 8000 a 8080
 
 /**
  * Fetches all sushi items from the backend API

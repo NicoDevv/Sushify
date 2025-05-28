@@ -1,5 +1,5 @@
-// Base API URL
-const API_BASE_URL = 'http://localhost:8000';
+// Usa la porta 8080 per le chiamate API
+const API_BASE_URL = 'http://localhost:8080';
 
 // Helper function to handle API requests
 export async function fetchAPI<T>(endpoint: string, options: RequestInit = {}): Promise<T> {

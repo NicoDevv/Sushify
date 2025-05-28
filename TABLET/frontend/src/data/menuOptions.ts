@@ -4,7 +4,7 @@ import { MenuOption } from '../types';
 export async function fetchMenuOptions(): Promise<MenuOption[]> {
   try {
     // Get all available menus from the backend API
-    const response = await fetch('http://localhost:8000/menu');
+    const response = await fetch('http://localhost:8080/menu');  // Modificato da 8000 a 8080
     const data = await response.json();
     
     // Map backend menu data to frontend MenuOption format

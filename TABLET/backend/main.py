@@ -9,10 +9,13 @@ app = FastAPI(
     version=API_CONFIG["version"]
 )
 
-# CORS configuration
+# CORS configuration - Aggiunta entrambe le origini possibili
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5171",
+        "http://127.0.0.1:5171"  # Aggiunta questa origine
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,7 +24,7 @@ app.add_middleware(
 # Include routers
 app.include_router(menu.router)
 app.include_router(piatto.router)
-app.include_router(ordine.router)  # Added the order router
+app.include_router(ordine.router)
 
 @app.get("/")
 def read_root():
@@ -29,4 +32,4 @@ def read_root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
