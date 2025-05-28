@@ -1,26 +1,25 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
+import TableSelectPage from './pages/TableSelectPage';
+import MenuSelectPage from './pages/MenuSelectPage';
 import MenuPage from './pages/MenuPage';
 import DishPage from './pages/DishPage';
 import EditPage from './pages/EditPage';
+import { SushiProvider } from './context/SushiContext';
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen bg-red-50">
-      <Header />
-      <main className="flex-grow">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/menu" element={<MenuPage />} />
-          <Route path="/dish/:id" element={<DishPage />} />
-          <Route path="/edit/:id" element={<EditPage />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <SushiProvider>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/table-select" element={<TableSelectPage />} />
+        <Route path="/menu-select" element={<MenuSelectPage />} />
+        <Route path="/menu" element={<MenuPage />} />
+        <Route path="/dish/:id" element={<DishPage />} />
+        <Route path="/edit/:id" element={<EditPage />} />
+      </Routes>
+    </SushiProvider>
   );
 }
 

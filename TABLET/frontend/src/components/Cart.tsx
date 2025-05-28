@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSushi } from '../context/SushiContext';
 import { X, Plus, Minus, ShoppingBag, Trash2, Info } from 'lucide-react';
+import OrderConfirmation from './OrderConfirmation';
 
 interface CartProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface CartProps {
 
 const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
   const { cartItems, removeFromCart, updateItemQuantity, cartTotal, clearCart, isALaCarte } = useSushi();
+  const [showOrderConfirmation, setShowOrderConfirmation] = useState(false);
 
   if (!isOpen) return null;
 
@@ -16,6 +18,10 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
   const hasAllYouCanEatItems = cartItems.some(item => item.menuType?.includes('allyoucaneat'));
   const hasALaCarteItems = cartItems.some(item => item.menuType?.includes('alacarte'));
   const hasMixedMenuTypes = hasAllYouCanEatItems && hasALaCarteItems;
+
+  const handleCheckout = () => {
+    setShowOrderConfirmation(true);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -141,7 +147,10 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
               </div>
               
               <div className="space-y-2">
-                <button className="w-full py-3 bg-red-800 text-white rounded hover:bg-red-700 transition-colors">
+                <button 
+                  onClick={handleCheckout}
+                  className="w-full py-3 bg-red-800 text-white rounded hover:bg-red-700 transition-colors"
+                >
                   Procedi all'ordine
                 </button>
                 <button 
@@ -156,6 +165,16 @@ const Cart: React.FC<CartProps> = ({ isOpen, onClose }) => {
           </>
         )}
       </div>
+
+      {/* Show the order confirmation dialog when checkout is clicked */}
+      {showOrderConfirmation && (
+        <OrderConfirmation 
+          onClose={() => {
+            setShowOrderConfirmation(false);
+            onClose(); // Close the cart after completing the order
+          }} 
+        />
+      )}
     </div>
   );
 };

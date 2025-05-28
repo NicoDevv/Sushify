@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from config import API_CONFIG
-from api.endpoints import menu, piatto
+from api.endpoints import menu, piatto, ordine
 
 app = FastAPI(
     title=API_CONFIG["title"],
@@ -21,6 +21,7 @@ app.add_middleware(
 # Include routers
 app.include_router(menu.router)
 app.include_router(piatto.router)
+app.include_router(ordine.router)  # Added the order router
 
 @app.get("/")
 def read_root():

@@ -8,7 +8,7 @@ import Header from '../components/Header';
 const DishPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getItemById, removedIngredients, isALaCarte, addToCart } = useSushi();
+  const { getItemById, removedIngredients, removedIngredientIds, isALaCarte, addToCart } = useSushi();
   
   const item = getItemById(Number(id));
   
@@ -30,14 +30,16 @@ const DishPage: React.FC = () => {
   
   // Get removed ingredients for this dish
   const dishRemovedIngredients = removedIngredients[item.id] || [];
+  const dishRemovedIngredientIds = removedIngredientIds[item.id] || [];
   // Filter ingredients to show only those not removed
   const currentIngredients = item.ingredients.filter(ing => !dishRemovedIngredients.includes(ing));
 
   const handleAddToCart = () => {
     if (item) {
-      // Passa gli ingredienti rimossi se ce ne sono
-      const removed = removedIngredients[item.id] || [];
-      addToCart(item.id, removed);
+      // Passa gli ingredienti rimossi e i loro IDs
+      const removedNames = removedIngredients[item.id] || [];
+      const removedIds = removedIngredientIds[item.id] || [];
+      addToCart(item.id, removedNames, removedIds);
     }
   };
 

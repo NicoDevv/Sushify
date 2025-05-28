@@ -1,16 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import MenuCard from '../components/MenuCard';
 import JapanesePattern from '../components/JapanesePattern';
-import Header from '../components/Header'; // Importa il nuovo Header
+import Header from '../components/Header';
 import { useSushi } from '../context/SushiContext';
 
 const MenuPage: React.FC = () => {
-  const { items, loading, error, selectedMenuType } = useSushi();
+  const { items, loading, error, selectedMenuType, tableNumber } = useSushi();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const menuType = selectedMenuType || searchParams.get('type') || 'alacarte-regular';
   
+  // Reindirizza alla pagina di selezione del tavolo se non c'è un numero di tavolo
+  useEffect(() => {
+    if (!tableNumber) {
+      navigate('/table-select');
+    }
+    // Se c'è un tavolo ma non c'è un tipo di menu selezionato, vai alla pagina di selezione del menu
+    else if (!selectedMenuType) {
+      navigate('/menu-select');
+    }
+  }, [tableNumber, selectedMenuType, navigate]);
+
   // Get menu information based on type
   const getMenuInfo = () => {
     const isAllYouCanEat = menuType.startsWith('allyoucaneat');
@@ -64,10 +76,22 @@ const MenuPage: React.FC = () => {
       </div>
     );
   }
+  
+  // Se non c'è un numero di tavolo o un tipo di menu, mostra un messaggio di caricamento mentre viene reindirizzato
+  if (!tableNumber || !selectedMenuType) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="animate-spin h-10 w-10 text-red-800 mx-auto mb-4" />
+          <p className="text-gray-600">Reindirizzamento...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-red-50 relative">
-      <Header title={menuInfo.title} /> {/* Usa il nuovo Header */}
+      <Header title={menuInfo.title} />
       <div className="pt-20 pb-8 min-h-screen relative">
         <JapanesePattern className="top-24 right-0" />
         

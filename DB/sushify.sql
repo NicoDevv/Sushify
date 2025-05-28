@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Apr 29, 2025 alle 08:42
--- Versione del server: 10.4.28-MariaDB
--- Versione PHP: 8.0.28
+-- Creato il: Mag 28, 2025 alle 19:06
+-- Versione del server: 10.4.32-MariaDB
+-- Versione PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -152,6 +152,19 @@ CREATE TABLE `ordine_personalizzato` (
   `id_op` int(11) NOT NULL,
   `cod_ordine` int(11) DEFAULT NULL,
   `cod_pp` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ordine_piatto`
+--
+
+CREATE TABLE `ordine_piatto` (
+  `id_op` int(11) NOT NULL,
+  `cod_ordine` int(11) DEFAULT NULL,
+  `cod_piatto` int(11) DEFAULT NULL,
+  `quantita` int(11) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -786,6 +799,14 @@ ALTER TABLE `ordine_personalizzato`
   ADD KEY `cod_pp` (`cod_pp`);
 
 --
+-- Indici per le tabelle `ordine_piatto`
+--
+ALTER TABLE `ordine_piatto`
+  ADD PRIMARY KEY (`id_op`),
+  ADD KEY `cod_ordine` (`cod_ordine`),
+  ADD KEY `cod_piatto` (`cod_piatto`);
+
+--
 -- Indici per le tabelle `pagamento`
 --
 ALTER TABLE `pagamento`
@@ -867,10 +888,34 @@ ALTER TABLE `assegnazione_tablet`
   MODIFY `id_at` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT per la tabella `ordine`
+--
+ALTER TABLE `ordine`
+  MODIFY `id_ordine` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT per la tabella `ordine_personalizzato`
 --
 ALTER TABLE `ordine_personalizzato`
   MODIFY `id_op` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ordine_piatto`
+--
+ALTER TABLE `ordine_piatto`
+  MODIFY `id_op` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT per la tabella `pagamento`
+--
+ALTER TABLE `pagamento`
+  MODIFY `id_pagamento` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `personalizzazioni`
+--
+ALTER TABLE `personalizzazioni`
+  MODIFY `id_personalizzazione` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `piatto_componenti`
@@ -889,6 +934,12 @@ ALTER TABLE `piatto_menu`
 --
 ALTER TABLE `piatto_personalizzato`
   MODIFY `id_pp` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `tavolata`
+--
+ALTER TABLE `tavolata`
+  MODIFY `id_tavolata` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Limiti per le tabelle scaricate
@@ -913,6 +964,13 @@ ALTER TABLE `ordine`
 ALTER TABLE `ordine_personalizzato`
   ADD CONSTRAINT `ordine_personalizzato_ibfk_1` FOREIGN KEY (`cod_ordine`) REFERENCES `ordine` (`id_ordine`),
   ADD CONSTRAINT `ordine_personalizzato_ibfk_2` FOREIGN KEY (`cod_pp`) REFERENCES `piatto_personalizzato` (`id_pp`);
+
+--
+-- Limiti per la tabella `ordine_piatto`
+--
+ALTER TABLE `ordine_piatto`
+  ADD CONSTRAINT `ordine_piatto_ibfk_1` FOREIGN KEY (`cod_ordine`) REFERENCES `ordine` (`id_ordine`),
+  ADD CONSTRAINT `ordine_piatto_ibfk_2` FOREIGN KEY (`cod_piatto`) REFERENCES `piatto` (`id_piatto`);
 
 --
 -- Limiti per la tabella `personalizzazioni`

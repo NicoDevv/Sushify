@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 19, 2025 alle 14:35
+-- Creato il: Mag 28, 2025 alle 19:06
 -- Versione del server: 10.4.32-MariaDB
 -- Versione PHP: 8.2.12
 
@@ -107,19 +107,6 @@ INSERT INTO `componenti` (`id_componente`, `nome_componente`, `intolleranza`) VA
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `componenti_rimossi`
---
-
-CREATE TABLE `componenti_rimossi` (
-  `id_rimozione` int(11) NOT NULL,
-  `cod_ordine` int(11) NOT NULL,
-  `cod_piatto` int(11) NOT NULL,
-  `cod_componente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `menu`
 --
 
@@ -170,6 +157,19 @@ CREATE TABLE `ordine_personalizzato` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `ordine_piatto`
+--
+
+CREATE TABLE `ordine_piatto` (
+  `id_op` int(11) NOT NULL,
+  `cod_ordine` int(11) DEFAULT NULL,
+  `cod_piatto` int(11) DEFAULT NULL,
+  `quantita` int(11) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `pagamento`
 --
 
@@ -194,13 +194,6 @@ CREATE TABLE `personalizzazioni` (
   `descrizione` varchar(50) DEFAULT NULL,
   `cod_comp` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dump dei dati per la tabella `personalizzazioni`
---
-
-INSERT INTO `personalizzazioni` (`id_personalizzazione`, `tipo_personalizzazione`, `descrizione`, `cod_comp`) VALUES
-(1, 'rimuovi', 'Rimuovi componente', NULL);
 
 -- --------------------------------------------------------
 
@@ -283,232 +276,231 @@ INSERT INTO `piatto` (`id_piatto`, `nome_piatto`, `descrizione`, `prezzo`, `cate
 CREATE TABLE `piatto_componenti` (
   `id_pc` int(11) NOT NULL,
   `cod_p` int(11) DEFAULT NULL,
-  `id_c` int(11) DEFAULT NULL,
-  `rimuovibile` tinyint(1) NOT NULL DEFAULT 0
+  `id_c` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `piatto_componenti`
 --
 
-INSERT INTO `piatto_componenti` (`id_pc`, `cod_p`, `id_c`, `rimuovibile`) VALUES
-(1, 100, 300, 0),
-(2, 100, 301, 1),
-(3, 100, 305, 1),
-(4, 101, 300, 0),
-(5, 101, 302, 1),
-(6, 101, 305, 1),
-(7, 102, 300, 0),
-(8, 102, 303, 1),
-(9, 102, 305, 1),
-(10, 103, 300, 0),
-(11, 103, 304, 1),
-(12, 103, 317, 1),
-(13, 103, 305, 1),
-(14, 104, 300, 0),
-(15, 104, 306, 1),
-(16, 104, 307, 1),
-(17, 104, 347, 1),
-(18, 104, 330, 1),
-(19, 105, 300, 0),
-(20, 105, 308, 1),
-(21, 105, 305, 1),
-(22, 106, 300, 1),
-(23, 106, 337, 1),
-(24, 106, 305, 1),
-(25, 107, 300, 1),
-(26, 107, 307, 1),
-(27, 107, 309, 1),
-(28, 108, 300, 1),
-(29, 108, 307, 1),
-(30, 108, 310, 1),
-(31, 109, 300, 1),
-(32, 109, 311, 1),
-(33, 109, 312, 1),
-(34, 109, 307, 1),
-(35, 110, 300, 1),
-(36, 110, 313, 1),
-(37, 110, 314, 1),
-(38, 110, 315, 1),
-(39, 110, 312, 1),
-(40, 110, 307, 1),
-(41, 111, 300, 1),
-(42, 111, 301, 1),
-(43, 111, 314, 1),
-(44, 111, 316, 1),
-(45, 111, 307, 1),
-(46, 112, 300, 1),
-(47, 112, 304, 1),
-(48, 112, 314, 1),
-(49, 112, 315, 1),
-(50, 112, 317, 1),
-(51, 112, 307, 1),
-(52, 113, 300, 1),
-(53, 113, 314, 1),
-(54, 113, 315, 1),
-(55, 113, 318, 1),
-(56, 113, 307, 0),
-(57, 114, 300, 1),
-(58, 114, 303, 1),
-(59, 114, 343, 1),
-(60, 114, 314, 1),
-(61, 114, 312, 1),
-(62, 114, 307, 0),
-(63, 115, 300, 1),
-(64, 115, 311, 1),
-(65, 115, 312, 1),
-(66, 115, 307, 0),
-(67, 116, 300, 1),
-(68, 116, 302, 1),
-(69, 116, 307, 0),
-(70, 117, 300, 1),
-(71, 117, 315, 1),
-(72, 117, 307, 0),
-(73, 118, 300, 1),
-(74, 118, 301, 1),
-(75, 118, 307, 0),
-(76, 119, 300, 1),
-(77, 119, 314, 1),
-(78, 119, 307, 1),
-(79, 120, 300, 1),
-(80, 120, 306, 1),
-(81, 120, 307, 0),
-(82, 121, 300, 1),
-(83, 121, 319, 1),
-(84, 121, 307, 1),
-(85, 122, 300, 1),
-(86, 122, 337, 1),
-(87, 122, 320, 1),
-(88, 122, 307, 1),
-(89, 123, 300, 1),
-(90, 123, 301, 1),
-(91, 123, 304, 1),
-(92, 123, 314, 1),
-(93, 123, 307, 1),
-(94, 124, 300, 1),
-(95, 124, 311, 1),
-(96, 124, 312, 1),
-(97, 124, 307, 1),
-(98, 125, 300, 1),
-(99, 125, 303, 1),
-(100, 125, 343, 1),
-(101, 125, 314, 1),
-(102, 125, 307, 1),
-(103, 126, 300, 1),
-(104, 126, 321, 1),
-(105, 126, 307, 1),
-(106, 127, 300, 1),
-(107, 127, 302, 1),
-(108, 127, 315, 1),
-(109, 127, 301, 1),
-(110, 127, 307, 1),
-(111, 128, 300, 1),
-(112, 128, 306, 1),
-(113, 128, 322, 1),
-(114, 128, 323, 1),
-(115, 128, 315, 1),
-(116, 128, 324, 1),
-(117, 128, 307, 1),
-(118, 129, 300, 1),
-(119, 129, 314, 1),
-(120, 129, 315, 1),
-(121, 129, 323, 1),
-(122, 129, 344, 1),
-(123, 129, 307, 1),
-(124, 130, 303, 1),
-(125, 130, 343, 1),
-(126, 131, 332, 1),
-(127, 132, 333, 1),
-(128, 132, 334, 1),
-(129, 132, 346, 1),
-(130, 132, 330, 1),
-(131, 133, 325, 1),
-(132, 133, 326, 1),
-(133, 133, 327, 1),
-(134, 133, 328, 1),
-(135, 133, 329, 1),
-(136, 133, 330, 1),
-(137, 134, 326, 1),
-(138, 134, 330, 1),
-(139, 134, 331, 1),
-(140, 134, 328, 1),
-(141, 134, 329, 1),
-(142, 135, 332, 1),
-(143, 135, 333, 1),
-(144, 135, 335, 1),
-(145, 135, 325, 1),
-(146, 136, 335, 1),
-(147, 136, 336, 1),
-(148, 136, 347, 1),
-(149, 136, 348, 1),
-(150, 136, 330, 1),
-(151, 137, 302, 1),
-(152, 137, 314, 1),
-(153, 137, 320, 1),
-(154, 137, 330, 1),
-(155, 137, 345, 1),
-(156, 138, 336, 1),
-(157, 138, 335, 1),
-(158, 138, 307, 0),
-(159, 138, 320, 1),
-(160, 139, 336, 1),
-(161, 139, 335, 1),
-(162, 139, 307, 0),
-(163, 140, 300, 1),
-(164, 140, 307, 1),
-(165, 141, 300, 1),
-(166, 141, 318, 1),
-(167, 141, 305, 1),
-(168, 142, 300, 1),
-(169, 142, 301, 1),
-(170, 142, 320, 1),
-(171, 142, 334, 1),
-(172, 142, 330, 1),
-(173, 143, 300, 0),
-(174, 143, 304, 1),
-(175, 143, 317, 1),
-(176, 143, 307, 1),
-(177, 144, 300, 1),
-(178, 144, 343, 1),
-(179, 144, 303, 1),
-(180, 144, 323, 1),
-(181, 144, 342, 1),
-(182, 145, 301, 1),
-(183, 146, 302, 1),
-(184, 147, 340, 1),
-(185, 148, 308, 1),
-(186, 149, 339, 1),
-(187, 149, 304, 1),
-(188, 149, 330, 1),
-(189, 149, 316, 1),
-(190, 149, 305, 1),
-(191, 135, 304, 1),
-(192, 135, 305, 1),
-(193, 135, 306, 1),
-(194, 135, 337, 1),
-(195, 136, 303, 1),
-(196, 136, 301, 1),
-(197, 136, 304, 1),
-(198, 138, 340, 1),
-(199, 138, 301, 1),
-(200, 138, 304, 1),
-(201, 138, 305, 1),
-(202, 138, 303, 1),
-(203, 132, 304, 1),
-(204, 132, 307, 1),
-(205, 132, 312, 1),
-(206, 133, 307, 1),
-(207, 133, 314, 1),
-(208, 133, 315, 1),
-(209, 133, 304, 1),
-(210, 133, 312, 1),
-(211, 125, 308, 1),
-(212, 125, 309, 1),
-(213, 125, 303, 1),
-(214, 126, 307, 1),
-(215, 126, 314, 1),
-(216, 127, 307, 1),
-(217, 127, 315, 1);
+INSERT INTO `piatto_componenti` (`id_pc`, `cod_p`, `id_c`) VALUES
+(1, 100, 300),
+(2, 100, 301),
+(3, 100, 305),
+(4, 101, 300),
+(5, 101, 302),
+(6, 101, 305),
+(7, 102, 300),
+(8, 102, 303),
+(9, 102, 305),
+(10, 103, 300),
+(11, 103, 304),
+(12, 103, 317),
+(13, 103, 305),
+(14, 104, 300),
+(15, 104, 306),
+(16, 104, 307),
+(17, 104, 347),
+(18, 104, 330),
+(19, 105, 300),
+(20, 105, 308),
+(21, 105, 305),
+(22, 106, 300),
+(23, 106, 337),
+(24, 106, 305),
+(25, 107, 300),
+(26, 107, 307),
+(27, 107, 309),
+(28, 108, 300),
+(29, 108, 307),
+(30, 108, 310),
+(31, 109, 300),
+(32, 109, 311),
+(33, 109, 312),
+(34, 109, 307),
+(35, 110, 300),
+(36, 110, 313),
+(37, 110, 314),
+(38, 110, 315),
+(39, 110, 312),
+(40, 110, 307),
+(41, 111, 300),
+(42, 111, 301),
+(43, 111, 314),
+(44, 111, 316),
+(45, 111, 307),
+(46, 112, 300),
+(47, 112, 304),
+(48, 112, 314),
+(49, 112, 315),
+(50, 112, 317),
+(51, 112, 307),
+(52, 113, 300),
+(53, 113, 314),
+(54, 113, 315),
+(55, 113, 318),
+(56, 113, 307),
+(57, 114, 300),
+(58, 114, 303),
+(59, 114, 343),
+(60, 114, 314),
+(61, 114, 312),
+(62, 114, 307),
+(63, 115, 300),
+(64, 115, 311),
+(65, 115, 312),
+(66, 115, 307),
+(67, 116, 300),
+(68, 116, 302),
+(69, 116, 307),
+(70, 117, 300),
+(71, 117, 315),
+(72, 117, 307),
+(73, 118, 300),
+(74, 118, 301),
+(75, 118, 307),
+(76, 119, 300),
+(77, 119, 314),
+(78, 119, 307),
+(79, 120, 300),
+(80, 120, 306),
+(81, 120, 307),
+(82, 121, 300),
+(83, 121, 319),
+(84, 121, 307),
+(85, 122, 300),
+(86, 122, 337),
+(87, 122, 320),
+(88, 122, 307),
+(89, 123, 300),
+(90, 123, 301),
+(91, 123, 304),
+(92, 123, 314),
+(93, 123, 307),
+(94, 124, 300),
+(95, 124, 311),
+(96, 124, 312),
+(97, 124, 307),
+(98, 125, 300),
+(99, 125, 303),
+(100, 125, 343),
+(101, 125, 314),
+(102, 125, 307),
+(103, 126, 300),
+(104, 126, 321),
+(105, 126, 307),
+(106, 127, 300),
+(107, 127, 302),
+(108, 127, 315),
+(109, 127, 301),
+(110, 127, 307),
+(111, 128, 300),
+(112, 128, 306),
+(113, 128, 322),
+(114, 128, 323),
+(115, 128, 315),
+(116, 128, 324),
+(117, 128, 307),
+(118, 129, 300),
+(119, 129, 314),
+(120, 129, 315),
+(121, 129, 323),
+(122, 129, 344),
+(123, 129, 307),
+(124, 130, 303),
+(125, 130, 343),
+(126, 131, 332),
+(127, 132, 333),
+(128, 132, 334),
+(129, 132, 346),
+(130, 132, 330),
+(131, 133, 325),
+(132, 133, 326),
+(133, 133, 327),
+(134, 133, 328),
+(135, 133, 329),
+(136, 133, 330),
+(137, 134, 326),
+(138, 134, 330),
+(139, 134, 331),
+(140, 134, 328),
+(141, 134, 329),
+(142, 135, 332),
+(143, 135, 333),
+(144, 135, 335),
+(145, 135, 325),
+(146, 136, 335),
+(147, 136, 336),
+(148, 136, 347),
+(149, 136, 348),
+(150, 136, 330),
+(151, 137, 302),
+(152, 137, 314),
+(153, 137, 320),
+(154, 137, 330),
+(155, 137, 345),
+(156, 138, 336),
+(157, 138, 335),
+(158, 138, 307),
+(159, 138, 320),
+(160, 139, 336),
+(161, 139, 335),
+(162, 139, 307),
+(163, 140, 300),
+(164, 140, 307),
+(165, 141, 300),
+(166, 141, 318),
+(167, 141, 305),
+(168, 142, 300),
+(169, 142, 301),
+(170, 142, 320),
+(171, 142, 334),
+(172, 142, 330),
+(173, 143, 300),
+(174, 143, 304),
+(175, 143, 317),
+(176, 143, 307),
+(177, 144, 300),
+(178, 144, 343),
+(179, 144, 303),
+(180, 144, 323),
+(181, 144, 342),
+(182, 145, 301),
+(183, 146, 302),
+(184, 147, 340),
+(185, 148, 308),
+(186, 149, 339),
+(187, 149, 304),
+(188, 149, 330),
+(189, 149, 316),
+(190, 149, 305),
+(191, 135, 304),
+(192, 135, 305),
+(193, 135, 306),
+(194, 135, 337),
+(195, 136, 303),
+(196, 136, 301),
+(197, 136, 304),
+(198, 138, 340),
+(199, 138, 301),
+(200, 138, 304),
+(201, 138, 305),
+(202, 138, 303),
+(203, 132, 304),
+(204, 132, 307),
+(205, 132, 312),
+(206, 133, 307),
+(207, 133, 314),
+(208, 133, 315),
+(209, 133, 304),
+(210, 133, 312),
+(211, 125, 308),
+(212, 125, 309),
+(213, 125, 303),
+(214, 126, 307),
+(215, 126, 314),
+(216, 127, 307),
+(217, 127, 315);
 
 -- --------------------------------------------------------
 
@@ -786,15 +778,6 @@ ALTER TABLE `componenti`
   ADD PRIMARY KEY (`id_componente`);
 
 --
--- Indici per le tabelle `componenti_rimossi`
---
-ALTER TABLE `componenti_rimossi`
-  ADD PRIMARY KEY (`id_rimozione`),
-  ADD KEY `fk_ordine_rimoz` (`cod_ordine`),
-  ADD KEY `fk_piatto_rimoz` (`cod_piatto`),
-  ADD KEY `fk_comp_rimoz` (`cod_componente`);
-
---
 -- Indici per le tabelle `menu`
 --
 ALTER TABLE `menu`
@@ -814,6 +797,14 @@ ALTER TABLE `ordine_personalizzato`
   ADD PRIMARY KEY (`id_op`),
   ADD KEY `cod_ordine` (`cod_ordine`),
   ADD KEY `cod_pp` (`cod_pp`);
+
+--
+-- Indici per le tabelle `ordine_piatto`
+--
+ALTER TABLE `ordine_piatto`
+  ADD PRIMARY KEY (`id_op`),
+  ADD KEY `cod_ordine` (`cod_ordine`),
+  ADD KEY `cod_piatto` (`cod_piatto`);
 
 --
 -- Indici per le tabelle `pagamento`
@@ -897,16 +888,34 @@ ALTER TABLE `assegnazione_tablet`
   MODIFY `id_at` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT per la tabella `componenti_rimossi`
+-- AUTO_INCREMENT per la tabella `ordine`
 --
-ALTER TABLE `componenti_rimossi`
-  MODIFY `id_rimozione` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ordine`
+  MODIFY `id_ordine` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `ordine_personalizzato`
 --
 ALTER TABLE `ordine_personalizzato`
   MODIFY `id_op` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `ordine_piatto`
+--
+ALTER TABLE `ordine_piatto`
+  MODIFY `id_op` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT per la tabella `pagamento`
+--
+ALTER TABLE `pagamento`
+  MODIFY `id_pagamento` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT per la tabella `personalizzazioni`
+--
+ALTER TABLE `personalizzazioni`
+  MODIFY `id_personalizzazione` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `piatto_componenti`
@@ -927,6 +936,12 @@ ALTER TABLE `piatto_personalizzato`
   MODIFY `id_pp` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT per la tabella `tavolata`
+--
+ALTER TABLE `tavolata`
+  MODIFY `id_tavolata` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Limiti per le tabelle scaricate
 --
 
@@ -936,14 +951,6 @@ ALTER TABLE `piatto_personalizzato`
 ALTER TABLE `assegnazione_tablet`
   ADD CONSTRAINT `assegnazione_tablet_ibfk_1` FOREIGN KEY (`cod_tavolo`) REFERENCES `tavolo` (`id_tavolo`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `assegnazione_tablet_ibfk_2` FOREIGN KEY (`cod_tablet`) REFERENCES `tablet` (`id_tablet`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Limiti per la tabella `componenti_rimossi`
---
-ALTER TABLE `componenti_rimossi`
-  ADD CONSTRAINT `fk_comp_rimoz` FOREIGN KEY (`cod_componente`) REFERENCES `componenti` (`id_componente`),
-  ADD CONSTRAINT `fk_ordine_rimoz` FOREIGN KEY (`cod_ordine`) REFERENCES `ordine` (`id_ordine`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_piatto_rimoz` FOREIGN KEY (`cod_piatto`) REFERENCES `piatto` (`id_piatto`);
 
 --
 -- Limiti per la tabella `ordine`
@@ -957,6 +964,13 @@ ALTER TABLE `ordine`
 ALTER TABLE `ordine_personalizzato`
   ADD CONSTRAINT `ordine_personalizzato_ibfk_1` FOREIGN KEY (`cod_ordine`) REFERENCES `ordine` (`id_ordine`),
   ADD CONSTRAINT `ordine_personalizzato_ibfk_2` FOREIGN KEY (`cod_pp`) REFERENCES `piatto_personalizzato` (`id_pp`);
+
+--
+-- Limiti per la tabella `ordine_piatto`
+--
+ALTER TABLE `ordine_piatto`
+  ADD CONSTRAINT `ordine_piatto_ibfk_1` FOREIGN KEY (`cod_ordine`) REFERENCES `ordine` (`id_ordine`),
+  ADD CONSTRAINT `ordine_piatto_ibfk_2` FOREIGN KEY (`cod_piatto`) REFERENCES `piatto` (`id_piatto`);
 
 --
 -- Limiti per la tabella `personalizzazioni`

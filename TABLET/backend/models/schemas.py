@@ -45,3 +45,25 @@ class PiattoCarrelloResponse(BaseModel):
     nome_piatto: str
     componenti_rimossi: List[ComponenteResponse] = []
     message: str
+
+# New models for order management
+class OrderItemRequest(BaseModel):
+    id: int
+    name: str
+    price: float
+    quantity: int
+    componenti_rimossi: Optional[List[int]] = None  # List of component IDs to be removed
+
+class OrderRequest(BaseModel):
+    items: List[OrderItemRequest]
+    tavolo: int
+    tipo_menu: str
+    note: Optional[str] = None
+
+class OrderResponse(BaseModel):
+    id_ordine: int
+    tavolo: int
+    tipo_menu: str
+    num_items: int
+    data_ordine: str
+    message: str

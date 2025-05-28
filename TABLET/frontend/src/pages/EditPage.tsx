@@ -4,21 +4,41 @@ import { useSushi } from '../context/SushiContext';
 import { ArrowLeft, Check, X } from 'lucide-react';
 import JapanesePattern from '../components/JapanesePattern';
 
+// Define interface for ingredients with IDs
+interface Ingredient {
+  id: number;
+  name: string;
+}
+
 const EditPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getItemById, customizeDish, removedIngredients } = useSushi();
+  const { getItemById, customizeDish, removedIngredients, removedIngredientIds } = useSushi();
   
   const item = getItemById(Number(id));
-  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  // Store both names and IDs of removed ingredients
+  const [selectedIngredientNames, setSelectedIngredientNames] = useState<string[]>([]);
+  const [selectedIngredientIds, setSelectedIngredientIds] = useState<number[]>([]);
+  
+  // Map ingredients to include both ID and name
+  // Note: This is a simplification. In a real application, you would fetch the complete
+  // ingredient data with IDs from your backend using an API call.
+  const ingredientsWithIds: Ingredient[] = item ? item.ingredients.map((name, index) => ({
+    // Using index + 300 as a dummy ID. In a real application, you would use actual IDs from your backend
+    id: 300 + index,
+    name
+  })) : [];
   
   // Initialize with already removed ingredients
   useEffect(() => {
     if (item) {
-      const removed = removedIngredients[item.id] || [];
-      setSelectedIngredients(removed);
+      const removedNames = removedIngredients[item.id] || [];
+      setSelectedIngredientNames(removedNames);
+      
+      const removedIds = removedIngredientIds[item.id] || [];
+      setSelectedIngredientIds(removedIds);
     }
-  }, [item, removedIngredients]);
+  }, [item, removedIngredients, removedIngredientIds]);
   
   if (!item) {
     return (
@@ -36,16 +56,24 @@ const EditPage: React.FC = () => {
     );
   }
 
-  const toggleIngredient = (ingredient: string) => {
-    setSelectedIngredients(prev => 
-      prev.includes(ingredient)
-        ? prev.filter(i => i !== ingredient)
-        : [...prev, ingredient]
+  const toggleIngredient = (ingredient: Ingredient) => {
+    // Toggle ingredient name
+    setSelectedIngredientNames(prev => 
+      prev.includes(ingredient.name)
+        ? prev.filter(i => i !== ingredient.name)
+        : [...prev, ingredient.name]
+    );
+    
+    // Toggle ingredient ID
+    setSelectedIngredientIds(prev => 
+      prev.includes(ingredient.id)
+        ? prev.filter(i => i !== ingredient.id)
+        : [...prev, ingredient.id]
     );
   };
 
   const handleSave = () => {
-    customizeDish(item.id, selectedIngredients);
+    customizeDish(item.id, selectedIngredientNames, selectedIngredientIds);
     navigate(`/dish/${item.id}`);
   };
 
@@ -70,23 +98,23 @@ const EditPage: React.FC = () => {
             <div className="bg-red-50 p-4 rounded-lg mb-6">
               <h3 className="text-lg font-semibold text-red-800 mb-4">Ingredienti</h3>
               <div className="space-y-2">
-                {item.ingredients.map((ingredient, index) => (
+                {ingredientsWithIds.map((ingredient, index) => (
                   <div 
                     key={index}
                     className="flex items-center justify-between p-3 bg-white rounded border-l-4 border-red-400 shadow-sm"
                   >
-                    <span className={selectedIngredients.includes(ingredient) ? 'line-through text-gray-400' : ''}>
-                      {ingredient}
+                    <span className={selectedIngredientNames.includes(ingredient.name) ? 'line-through text-gray-400' : ''}>
+                      {ingredient.name}
                     </span>
                     <button 
                       onClick={() => toggleIngredient(ingredient)}
                       className={`p-1 rounded-full ${
-                        selectedIngredients.includes(ingredient)
+                        selectedIngredientNames.includes(ingredient.name)
                           ? 'bg-gray-200 text-gray-600 hover:bg-gray-300'
                           : 'bg-red-100 text-red-800 hover:bg-red-200'
                       }`}
                     >
-                      {selectedIngredients.includes(ingredient) ? <Check size={18} /> : <X size={18} />}
+                      {selectedIngredientNames.includes(ingredient.name) ? <Check size={18} /> : <X size={18} />}
                     </button>
                   </div>
                 ))}

@@ -47,3 +47,22 @@ export async function addModifiedDishToCart(dishId: number, removedComponents: n
     })
   });
 }
+
+// New API function for submitting orders
+export async function submitOrder(orderData: {
+  items: Array<{
+    id: number;
+    name: string;
+    price: number;
+    quantity: number;
+    componenti_rimossi?: number[];
+  }>;
+  tavolo: number;
+  tipo_menu: string;
+  note?: string;
+}) {
+  return fetchAPI('/ordine', {
+    method: 'POST',
+    body: JSON.stringify(orderData)
+  });
+}

@@ -2,13 +2,21 @@ import React, { createContext, useState, useContext, useEffect, ReactNode } from
 import { SushiItem, MenuType } from '../types';
 import { fetchAllSushiItems } from '../services/sushiService';
 
+// Extending the interface to include component IDs
+interface IngredientInfo {
+  id: number;
+  name: string;
+}
+
 interface CartItem {
   id: number;
   name: string;
   price: number;
   quantity: number;
   removedIngredients?: string[];
+  removedIngredientIds?: number[]; // New field to store component IDs
   image?: string;
+  menuType?: MenuType;
 }
 
 interface SushiContextType {
@@ -16,17 +24,22 @@ interface SushiContextType {
   loading: boolean;
   error: string | null;
   removedIngredients: Record<number, string[]>;
-  customizeDish: (id: number, ingredients: string[]) => void;
+  removedIngredientIds: Record<number, number[]>; // New field for component IDs
+  customizeDish: (id: number, ingredients: string[], ingredientIds: number[]) => void;
   getItemById: (id: number) => SushiItem | undefined;
   selectedMenuType: MenuType | null;
   setSelectedMenuType: (type: MenuType | null) => void;
+  tableNumber: number | null; // Nuovo campo per il numero del tavolo
+  setTableNumber: (number: number | null) => void; // Nuovo metodo per impostare il numero del tavolo
   isALaCarte: boolean;
   cartItems: CartItem[];
-  addToCart: (itemId: number, removedIngredients?: string[]) => void;
+  addToCart: (itemId: number, removedIngredients?: string[], removedIngredientIds?: number[]) => void;
   removeFromCart: (itemId: number) => void;
   clearCart: () => void;
   updateItemQuantity: (itemId: number, quantity: number) => void;
   cartTotal: number;
+  orderNotes: string; // Nuovo campo per le note dell'ordine
+  setOrderNotes: (notes: string) => void; // Nuovo metodo per impostare le note
 }
 
 const SushiContext = createContext<SushiContextType | undefined>(undefined);
@@ -36,8 +49,11 @@ export const SushiProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [removedIngredients, setRemovedIngredients] = useState<Record<number, string[]>>({});
+  const [removedIngredientIds, setRemovedIngredientIds] = useState<Record<number, number[]>>({});
   const [selectedMenuType, setSelectedMenuType] = useState<MenuType | null>(null);
+  const [tableNumber, setTableNumber] = useState<number | null>(null); // Nuovo stato per il numero del tavolo
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [orderNotes, setOrderNotes] = useState<string>(''); // Nuovo stato per le note dell'ordine
   
   // Derive if the selected menu is à la carte
   const isALaCarte = selectedMenuType ? selectedMenuType.startsWith('alacarte') : false;
@@ -65,15 +81,21 @@ export const SushiProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     return items.find(item => item.id === id);
   };
 
-  const customizeDish = (id: number, ingredients: string[]) => {
+  const customizeDish = (id: number, ingredients: string[], ingredientIds: number[]) => {
     setRemovedIngredients(prev => ({
       ...prev,
       [id]: ingredients
     }));
+    
+    // Also store the ingredient IDs
+    setRemovedIngredientIds(prev => ({
+      ...prev,
+      [id]: ingredientIds
+    }));
   };
 
   // Aggiungi un elemento al carrello
-  const addToCart = (itemId: number, removedIngredients: string[] = []) => {
+  const addToCart = (itemId: number, removedIngredients: string[] = [], removedIngredientIds: number[] = []) => {
     const item = getItemById(itemId);
     
     if (!item) return;
@@ -104,6 +126,7 @@ export const SushiProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           price: priceToUse, // Usa il prezzo calcolato in base al tipo di menu
           quantity: 1,
           removedIngredients: removedIngredients.length > 0 ? removedIngredients : undefined,
+          removedIngredientIds: removedIngredientIds.length > 0 ? removedIngredientIds : undefined,
           image: item.image,
           menuType: selectedMenuType // Memorizza anche il tipo di menu per riferimento futuro
         }];
@@ -147,17 +170,22 @@ export const SushiProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       loading, 
       error,
       removedIngredients,
+      removedIngredientIds,
       customizeDish,
       getItemById,
       selectedMenuType,
       setSelectedMenuType,
+      tableNumber,
+      setTableNumber,
       isALaCarte,
       cartItems,
       addToCart,
       removeFromCart,
       clearCart,
       updateItemQuantity,
-      cartTotal
+      cartTotal,
+      orderNotes,
+      setOrderNotes
     }}>
       {children}
     </SushiContext.Provider>

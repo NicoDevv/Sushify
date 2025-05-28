@@ -6,14 +6,15 @@ import Cart from './Cart';
 
 interface HeaderProps {
   title?: string;
+  showBackButton?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ title = "Sushify" }) => {
+const Header: React.FC<HeaderProps> = ({ title = "Sushify", showBackButton = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLandingPage = location.pathname === '/';
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { cartItems } = useSushi();
+  const { cartItems, tableNumber } = useSushi();
   
   // Calcola il numero totale di articoli nel carrello
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -33,6 +34,13 @@ const Header: React.FC<HeaderProps> = ({ title = "Sushify" }) => {
             <ChefHat className="text-red-800 mr-2" size={28} />
             <h1 className="text-xl font-bold text-red-900">{title}</h1>
           </div>
+          
+          {/* Mostra il numero del tavolo se impostato */}
+          {tableNumber && (
+            <div className="flex items-center px-3 py-1 bg-red-100 rounded-full">
+              <span className="text-sm font-medium text-red-800">Tavolo {tableNumber}</span>
+            </div>
+          )}
           
           <button
             onClick={toggleCart}
