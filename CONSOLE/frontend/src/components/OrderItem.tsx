@@ -1,10 +1,10 @@
 import React from 'react';
-import { Order, OrderStatus } from '../types';
-import { Clock, ArrowRight } from 'lucide-react';
+import { Order } from '../types';
+import { Clock, Check } from 'lucide-react';
 
 interface OrderItemProps {
   order: Order;
-  onStatusChange: (orderId: string, newStatus: OrderStatus) => void;
+  onStatusChange: (orderId: string) => void;
 }
 
 const OrderItem: React.FC<OrderItemProps> = ({ order, onStatusChange }) => {
@@ -19,17 +19,8 @@ const OrderItem: React.FC<OrderItemProps> = ({ order, onStatusChange }) => {
     return `${minutes} min`;
   };
   
-  const nextStatus = (): OrderStatus | null => {
-    if (order.status === 'new') return 'in-progress';
-    if (order.status === 'in-progress') return 'completed';
-    return null;
-  };
-  
-  const handleNext = () => {
-    const next = nextStatus();
-    if (next) {
-      onStatusChange(order.id, next);
-    }
+  const handleReady = () => {
+    onStatusChange(order.id);
   };
 
   return (
@@ -70,19 +61,12 @@ const OrderItem: React.FC<OrderItemProps> = ({ order, onStatusChange }) => {
         ))}
       </div>
 
-      {nextStatus() && (
-        <button
-          onClick={handleNext}
-          className={`w-full flex items-center justify-center gap-2 py-2 rounded-md text-sm font-medium transition-colors ${
-            order.status === 'new'
-              ? 'bg-yellow-500/20 border border-yellow-500/50 text-yellow-300 hover:bg-yellow-500/30'
-              : 'bg-green-500/20 border border-green-500/50 text-green-300 hover:bg-green-500/30'
-          }`}
-        >
-          {order.status === 'new' ? 'Inizia preparazione' : 'Completa'} 
-          <ArrowRight className="w-4 h-4" />
-        </button>
-      )}
+      <button
+        onClick={handleReady}
+        className="w-full flex items-center justify-center gap-2 py-2 rounded-md text-sm font-medium transition-colors bg-green-500/20 border border-green-500/50 text-green-300 hover:bg-green-500/30"
+      >
+        Pronto <Check className="w-4 h-4" />
+      </button>
     </div>
   );
 };

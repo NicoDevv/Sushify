@@ -1,7 +1,6 @@
 @echo off
-REM filepath: c:\Users\admin\Documents\GitHub\Sushify\Sushify-main\TABLET\start-sushify.bat
 echo ===================================
-echo    SUSHIFY TABLET QUICKSTART
+echo    SUSHIFY CONSOLE QUICKSTART
 echo ===================================
 echo.
 
@@ -22,24 +21,24 @@ if %ERRORLEVEL% neq 0 (
     goto :error
 )
 
-echo [2/4] Avvio del server backend sulla porta 8080...
-start cmd /k "cd %BACKEND_DIR% && echo Avvio del backend Sushify... && python main.py"
+echo [2/4] Avvio del server backend sulla porta 9090...
+start cmd /k "cd %BACKEND_DIR% && echo Avvio del backend Sushify Console... && python main.py"
 echo Backend in avvio... attendere 5 secondi
 timeout /t 5 /nobreak > nul
 
-echo [3/4] Avvio del frontend sulla porta 5171...
-start cmd /k "cd %FRONTEND_DIR% && echo Avvio del frontend Sushify... && npm run dev"
+echo [3/4] Avvio del frontend sulla porta 7070...
+start cmd /k "cd %FRONTEND_DIR% && echo Avvio del frontend Sushify Console... && npm run dev"
 
 echo [4/4] Apertura dell'applicazione nel browser...
 timeout /t 5 /nobreak > nul
-start http://localhost:5171/table-select
+start http://localhost:7070/
 
 echo.
 echo ===================================
-echo Sushify è in esecuzione!
+echo Sushify Console è in esecuzione!
 echo.
-echo Backend:   http://localhost:8080
-echo Frontend:  http://localhost:5171
+echo Backend:   http://localhost:9090
+echo Frontend:  http://localhost:7070
 echo.
 echo Premi un tasto qualsiasi per terminare tutti i processi...
 echo ===================================

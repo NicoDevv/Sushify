@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChefHat, Lock, Mail } from 'lucide-react';
 import axios from 'axios';
+import api from '../utils/api';
 
 interface LoginProps {
   setIsAuthenticated: (isAuthenticated: boolean) => void;
@@ -24,16 +25,22 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
       params.append('username', email);
       params.append('password', password);
 
-      const response = await axios.post('http://localhost:8000/token', params);
+      const response = await api.post('/token', params, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
 
-      if (response.status === 200) {
+      if (response.status === 200 && response.data && response.data.message === "Login avvenuto con successo") {
         // Login successful
         setIsAuthenticated(true);
         navigate('/orders');
+      } else {
+        setError('Risposta non valida dal server');
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        setError(error.response.data.detail);
+        setError(error.response.data.detail || 'Errore durante il login');
       } else {
         setError('Si è verificato un errore durante il login');
       }

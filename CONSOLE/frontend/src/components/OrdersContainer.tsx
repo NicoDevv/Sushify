@@ -5,10 +5,10 @@ import OrderItem from './OrderItem';
 interface OrdersContainerProps {
   orders: Order[];
   status: OrderStatus;
-  onStatusChange: (orderId: string, newStatus: OrderStatus) => void;
+  onStatusChange: (orderId: string) => void;
 }
 
-const OrdersContainer: React.FC<OrdersContainerProps> = ({ orders, status, onStatusChange }) => {
+const OrdersContainer: React.FC<OrdersContainerProps> = ({ orders, onStatusChange }) => {
   return (
     <div className="space-y-4">
       {orders.length === 0 ? (
