@@ -18,17 +18,54 @@ const OrdersPage: React.FC = () => {
       try {
         const response = await api.get('/api/orders');
         
-        // Convert string dates to Date objects
-        const ordersWithDates = response.data.map((order: any) => ({
-          ...order,
-          createdAt: new Date(order.createdAt)
-        }));
+        // Convert string dates to Date objects and ensure all data is properly processed
+        const ordersWithDates = response.data.map((order: any) => {
+          // Process the items to ensure all ingredients and modifications are properly displayed
+          const processedItems = order.items.map((item: any) => {
+            console.log('Ingredienti ricevuti per', item.name, ':', item.ingredients);
+            
+            return {
+              ...item,
+              ingredients: Array.isArray(item.ingredients) ? item.ingredients : [],
+              modifications: Array.isArray(item.modifications) 
+                ? item.modifications.map((mod: any) => ({
+                    description: mod.description || '',
+                    isAllergy: Boolean(mod.isAllergy)
+                  }))
+                : []
+            };
+          });
+          
+          // Log dell'ordine completo per debugging
+          console.log('Ordine elaborato:', {
+            id: order.id,
+            table: order.tableNumber,
+            realTableId: order.tableId || 'Non disponibile',
+            items: processedItems.map(i => ({
+              name: i.name, 
+              ingredients: i.ingredients,
+              modifications: i.modifications
+            }))
+          });
+          
+          return {
+            ...order,
+            items: processedItems,
+            tableNumber: order.tableNumber || 'N/A', // Usa il numero visualizzato nel ristorante
+            originalTableId: order.tableId, // Mantieni anche l'ID originale se disponibile
+            customerName: `Tavolo ${order.tableNumber || 'N/A'}`,
+            createdAt: new Date(order.createdAt)
+          };
+        });
         
         // Filtra solo gli ordini nuovi
         const newOrders = ordersWithDates.filter((order: Order) => order.status === 'new');
         
         setOrders(newOrders);
         setError(null);
+        
+        // Log the processed orders for debugging
+        console.log('Processed orders:', newOrders);
       } catch (err) {
         console.error('Error fetching orders:', err);
         
@@ -60,7 +97,7 @@ const OrdersPage: React.FC = () => {
     // Set up polling for regular updates
     const intervalId = setInterval(() => {
       fetchOrders();
-    }, 30000); // Refresh every 30 seconds
+    }, 10000); // Changed from 30000 to 10000 (10 seconds)
     
     return () => clearInterval(intervalId);
   }, [navigate]);
@@ -92,10 +129,27 @@ const OrdersPage: React.FC = () => {
           const response = await api.get('/api/orders');
           
           const ordersWithDates = response.data
-            .map((order: any) => ({
-              ...order,
-              createdAt: new Date(order.createdAt)
-            }))
+            .map((order: any) => {
+              // Process items again when refreshing
+              const processedItems = order.items.map((item: any) => ({
+                ...item,
+                ingredients: Array.isArray(item.ingredients) ? item.ingredients : [],
+                modifications: Array.isArray(item.modifications) 
+                  ? item.modifications.map((mod: any) => ({
+                      description: mod.description || '',
+                      isAllergy: Boolean(mod.isAllergy)
+                    }))
+                  : []
+              }));
+              
+              return {
+                ...order,
+                items: processedItems,
+                tableNumber: order.tableNumber || 'N/A',
+                customerName: `Tavolo ${order.tableNumber || 'N/A'}`,
+                createdAt: new Date(order.createdAt)
+              };
+            })
             .filter((order: Order) => order.status === 'new');
             
           setOrders(ordersWithDates);
